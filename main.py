@@ -1,5 +1,5 @@
-from instance.answer import Answer
-from instance.user import User
+from ans.answer import Answer
+from ans.user import User
 
 if __name__ == "__main__":
     answer = Answer()
