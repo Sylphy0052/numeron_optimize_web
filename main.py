@@ -3,6 +3,7 @@ from ans.user import User
 
 if __name__ == "__main__":
     answer = Answer()
-    user = User()
+    user = User(answer.digit)
     while True:
-        pass
+        input_number = user.input_num()
+        print(input_number)

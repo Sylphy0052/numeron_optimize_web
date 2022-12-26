@@ -4,6 +4,7 @@ from typing import List
 
 class Answer:
     def __init__(self, digit: int = 4) -> None:
+        self.digit = digit
         self.ans_list: List[int] = list()
         while len(self.ans_list) < digit:
             ans_d = random.randint(0, 9)
