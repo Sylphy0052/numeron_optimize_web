@@ -31,4 +31,5 @@
         "119"
     ],
     "autoDocstring.docstringFormat": "google",
+    "python.pythonPath": "/Users/pyente/GitHub/numeron_optimize_web/.venv/bin/python3.9",
 }
