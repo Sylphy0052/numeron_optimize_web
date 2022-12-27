@@ -100,5 +100,10 @@ class AI:
             if n_blow > 0:
                 self._remove_blow(input_num, n_blow)
 
+    def print_option(self) -> None:
+        for opt in self.option:
+            print(opt)
+        print(len(self.option))
+
     def __repr__(self) -> str:
         return f"AI{self.ai_id}: {self.name} ({len(self.option)})"
