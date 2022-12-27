@@ -1,5 +1,5 @@
 import random
-from typing import List
+from typing import List, Tuple
 
 
 class Answer:
@@ -13,6 +13,15 @@ class Answer:
         self.ans = ""
         for ans_d in self.ans_list:
             self.ans += str(ans_d)
+
+    def answer(self, number: List[int]) -> Tuple[int, int]:
+        n_hit, n_blow = 0, 0
+        for i, n in enumerate(number):
+            if n == self.ans_list[i]:
+                n_hit += 1
+            elif n in self.ans_list:
+                n_blow += 1
+        return n_hit, n_blow
 
     def __repr__(self) -> str:
         return f"ans={self.ans}"

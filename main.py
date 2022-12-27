@@ -6,4 +6,8 @@ if __name__ == "__main__":
     user = User(answer.digit)
     while True:
         input_number = user.input_num()
-        print(input_number)
+        n_hit, n_blow = answer.answer(input_number)
+        print(f"{n_hit}Hit {n_blow}Blow")
+        if n_hit == 4:
+            print("Correct numbers!!")
+            break

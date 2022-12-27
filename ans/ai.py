@@ -1,11 +1,11 @@
 from typing import List
 
 
-class User:
-    def __init__(self, digit: int, name: str = "test", user_id: int = 0) -> None:
+class AI:
+    def __init__(self, digit: int, name: str = "test", ai_id: int = 0) -> None:
         self.digit = digit
         self.name = name
-        self.user_id = user_id
+        self.ai_id = ai_id
 
     def input_num(self) -> List[int]:
         err = True
@@ -35,4 +35,4 @@ class User:
         return input_number
 
     def __repr__(self) -> str:
-        return f"User{self.user_id}: {self.name}"
+        return f"AI{self.ai_id}: {self.name}"
