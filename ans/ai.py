@@ -1,4 +1,5 @@
 import random
+import sys
 from typing import List
 
 from ans.history import History
@@ -57,6 +58,32 @@ class AI:
     def input_random(self) -> List[int]:
         input_number = random.choice(self.option)
         return input_number
+
+    def _evaluate_opt(self, opt: List[int]) -> float:
+        # 0h0bの場合
+        # 0h1bの場合
+        # 0h2bの場合
+        # 0h3bの場合
+        # 0h4bの場合
+        # 1h0bの場合
+        # 1h1bの場合
+        # 1h2bの場合
+        # 1h3bの場合
+        # 2h0bの場合
+        # 2h1bの場合
+        # 2h2bの場合
+        # 3h0bの場合
+        pass
+
+    def recommend_number(self) -> List[int]:
+        min_eva = float(sys.maxsize)
+        recommend_opt = self.option[0]
+        for opt in self.option:
+            evaluation = self._evaluate_opt(opt)
+            if evaluation < min_eva:
+                min_eva = evaluation
+                recommend_opt = opt
+        return recommend_opt
 
     def _remove_0h0b(self, input_num: List[int]) -> None:
         remove_index: List[int] = list()

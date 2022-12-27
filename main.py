@@ -13,6 +13,7 @@ if __name__ == "__main__":
         # for n in input_number:
         #     input_str += str(n)
         # print(f"Input {input_str}")
+        print(f"Recommend: {ai.recommend_number()}")
         input_number = ai.input_num()
         n_hit, n_blow = answer.answer(input_number)
         ai.feedback(input_number, n_hit, n_blow)
