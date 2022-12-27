@@ -2,6 +2,9 @@ import random
 import sys
 from typing import List
 
+import numpy as np
+import numpy.typing as npt
+
 from ans.history import History
 
 
@@ -12,6 +15,10 @@ class AI:
         self.ai_id = ai_id
         self.history: List[History] = list()
         self.option: List[List[int]] = list()
+        self.weight: npt.NDArray[np.float16] = np.array(
+            [1, 0.1, 0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.8], dtype=np.float16
+        )
+        self.is_first = True
         self._init_option()
 
     def _init_option(self) -> None:
@@ -60,22 +67,58 @@ class AI:
         return input_number
 
     def _evaluate_opt(self, opt: List[int]) -> float:
+        evaluation = 0.0
         # 0h0bの場合
-        # 0h1bの場合
-        # 0h2bの場合
-        # 0h3bの場合
-        # 0h4bの場合
-        # 1h0bの場合
-        # 1h1bの場合
-        # 1h2bの場合
-        # 1h3bの場合
-        # 2h0bの場合
-        # 2h1bの場合
-        # 2h2bの場合
-        # 3h0bの場合
-        pass
+        n00 = len(self.option)
+        for n in opt:
+            for opt_ in self.option:
+                if n in opt_:
+                    n00 -= 1
+
+        # それ以外の場合
+        n01, n02, n03, n04 = 0, 0, 0, 0
+        n10, n11, n12, n13 = 0, 0, 0, 0
+        n20, n21, n22, n30 = 0, 0, 0, 0
+        for opt_list in self.option:
+            hit_num, blow_num = 0, 0
+            for i, n in enumerate(opt_list):
+                if n == opt[i]:
+                    hit_num += 1
+                elif n in opt_list:
+                    blow_num += 1
+            if hit_num == 0 and blow_num == 1:
+                n01 += 1
+            elif hit_num == 0 and blow_num == 2:
+                n02 += 1
+            elif hit_num == 0 and blow_num == 3:
+                n03 += 1
+            elif hit_num == 0 and blow_num == 4:
+                n04 += 1
+            elif hit_num == 1 and blow_num == 0:
+                n10 += 1
+            elif hit_num == 1 and blow_num == 1:
+                n11 += 1
+            elif hit_num == 1 and blow_num == 2:
+                n12 += 1
+            elif hit_num == 1 and blow_num == 3:
+                n13 += 1
+            elif hit_num == 2 and blow_num == 0:
+                n20 += 1
+            elif hit_num == 2 and blow_num == 1:
+                n21 += 1
+            elif hit_num == 2 and blow_num == 2:
+                n22 += 1
+            elif hit_num == 3 and blow_num == 0:
+                n30 += 1
+
+        n_vector = np.array([n00, n01, n02, n03, n04, n10, n11, n12, n13, n20, n21, n22, n30])
+        evaluation = np.dot(n_vector, self.weight)
+        return evaluation
 
     def recommend_number(self) -> List[int]:
+        if self.is_first:
+            self.is_first = False
+            return self.input_random()
         min_eva = float(sys.maxsize)
         recommend_opt = self.option[0]
         for opt in self.option:

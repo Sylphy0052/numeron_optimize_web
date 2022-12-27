@@ -12,6 +12,7 @@ if __name__ == "__main__":
     user = User(digit)
     ai = AI(digit)
     while True:
+        print(f"Recommend: {ai.recommend_number()}")
         input_number = ai.input_num()
         while True:
             ans = input("n_hit,n_blow >")
