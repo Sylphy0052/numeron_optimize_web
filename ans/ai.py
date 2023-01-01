@@ -1,7 +1,7 @@
 import random
 import sys
 from typing import List
-
+from copy import deepcopy
 import numpy as np
 import numpy.typing as npt
 
@@ -16,10 +16,11 @@ class AI:
         self.history: List[History] = list()
         self.option: List[List[int]] = list()
         self.weight: npt.NDArray[np.float16] = np.array(
-            [1, 0.1, 0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.8], dtype=np.float16
+            [1, 0.1, 0.2, 0.3, 0.4, 0.2, 0.3, 0.4, 0.5, 0.5, 0.6, 0.7, 0.8], dtype=np.float16
         )
         self.is_first = True
         self._init_option()
+        self.all_option = deepcopy(self.option.copy())
 
     def _init_option(self) -> None:
         if self.digit == 4:
@@ -113,6 +114,9 @@ class AI:
 
         n_vector = np.array([n00, n01, n02, n03, n04, n10, n11, n12, n13, n20, n21, n22, n30])
         evaluation = np.dot(n_vector, self.weight)
+        if 1 in [n00, n01, n02, n03, n04, n10, n11, n12, n13, n20, n21, n22, n30]:
+            # evaluation -= 10
+            evaluation -= 50
         return evaluation
 
     def recommend_number(self) -> List[int]:
@@ -121,7 +125,7 @@ class AI:
             return self.input_random()
         min_eva = float(sys.maxsize)
         recommend_opt = self.option[0]
-        for opt in self.option:
+        for opt in self.all_option:
             evaluation = self._evaluate_opt(opt)
             if evaluation < min_eva:
                 min_eva = evaluation
@@ -136,25 +140,17 @@ class AI:
                     remove_index.append(idx)
         self.option = [opt for i, opt in enumerate(self.option) if i not in remove_index]
 
-    def _remove_hit(self, input_num: List[int], n_hit: int) -> None:
+    def _remove_hb(self, input_num: List[int], n_hit: int, n_blow: int) -> None:
         index_list: List[int] = list()
         for idx, opt_list in enumerate(self.option):
             hit_num = 0
-            for i, n in enumerate(opt_list):
-                if n == input_num[i]:
-                    hit_num += 1
-            if hit_num == n_hit:
-                index_list.append(idx)
-        self.option = [opt for i, opt in enumerate(self.option) if i in index_list]
-
-    def _remove_blow(self, input_num: List[int], n_blow: int) -> None:
-        index_list: List[int] = list()
-        for idx, opt_list in enumerate(self.option):
             blow_num = 0
             for i, n in enumerate(input_num):
-                if n in opt_list and n != opt_list[i]:
+                if n == opt_list[i]:
+                    hit_num += 1
+                elif n in opt_list:
                     blow_num += 1
-            if blow_num == n_blow:
+            if hit_num == n_hit and blow_num == n_blow:
                 index_list.append(idx)
         self.option = [opt for i, opt in enumerate(self.option) if i in index_list]
 
@@ -165,10 +161,7 @@ class AI:
         if n_hit == 0 and n_blow == 0:
             self._remove_0h0b(input_num)
         else:
-            if n_hit > 0:
-                self._remove_hit(input_num, n_hit)
-            if n_blow > 0:
-                self._remove_blow(input_num, n_blow)
+            self._remove_hb(input_num, n_hit, n_blow)
 
     def print_option(self) -> None:
         for opt in self.option:
